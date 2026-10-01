@@ -23,5 +23,12 @@ pipeline {
                 sh './scripts/test.sh'
             }
         }
+    
+        stage('Docker Build') {
+    steps {
+        echo 'Building Docker image...'
+        sh 'docker build -t java-shopping-app:1.0 .'
     }
+}
+}
 }
