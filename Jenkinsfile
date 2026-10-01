@@ -42,5 +42,12 @@ stage('Docker Test') {
         sh 'curl -f http://localhost:8082/health'
     }
 }
+stage('Docker Cleanup') {
+    steps {
+        echo 'Cleaning up Docker container...'
+        sh 'docker stop java-shopping-container'
+        sh 'docker rm java-shopping-container'
+    }
+}
 }
 }
