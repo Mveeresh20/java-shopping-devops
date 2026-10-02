@@ -49,5 +49,16 @@ stage('Docker Cleanup') {
         sh 'docker rm java-shopping-container'
     }
 }
+stage('AWS Test') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'aws-jenkins-credentials',
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
+            sh 'aws sts get-caller-identity'
+        }
+    }
+}
 }
 }
