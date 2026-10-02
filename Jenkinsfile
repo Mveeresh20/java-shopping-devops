@@ -16,6 +16,13 @@ pipeline {
                 sh './scripts/build.sh'
             }
         }
+        stage('Start Application') {
+    steps {
+        echo 'Starting Java Shopping Application...'
+        sh 'nohup java -jar target/java-shopping-devops-1.0.0.jar > app.log 2>&1 &'
+        sleep 3
+    }
+}
 
         stage('Test') {
             steps {
