@@ -131,7 +131,7 @@ stage('Deploy to EC2') {
                 -p 80:8080 \
                 536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0
 
- EOF
+EOF
             '''
         }
     }
