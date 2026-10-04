@@ -59,7 +59,7 @@ stage('Docker Cleanup') {
 stage('AWS Test') {
     steps {
         withCredentials([usernamePassword(
-            credentialsId: 'aws-jenkins-credentials',
+            credentialsId: 'credentials',
             usernameVariable: 'AWS_ACCESS_KEY_ID',
             passwordVariable: 'AWS_SECRET_ACCESS_KEY'
         )]) {
