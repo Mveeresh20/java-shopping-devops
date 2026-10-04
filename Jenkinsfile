@@ -91,5 +91,16 @@ stage('Push to ECR') {
         }
     }
 }
+stage('Test EC2 SSH') {
+    steps {
+        sshagent(['ec2-ssh-key']) {
+            sh '''
+                ssh -o StrictHostKeyChecking=no \
+                ubuntu@15.206.187.247 \
+                "hostname && whoami"
+            '''
+        }
+    }
+}
 }
 }
