@@ -102,5 +102,32 @@ stage('Test EC2 SSH') {
         }
     }
 }
+stage('Deploy to EC2') {
+    steps {
+        sshagent(['ec2-ssh-key']) {
+            sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@15.206.187.247 << 'EOF'
+
+                aws ecr get-login-password --region ap-south-1 |
+                docker login --username AWS --password-stdin \
+                536697229262.dkr.ecr.ap-south-1.amazonaws.com
+
+                docker pull \
+                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0
+
+                docker stop java-shopping-container 2>/dev/null || true
+
+                docker rm java-shopping-container 2>/dev/null || true
+
+                docker run -d \
+                --name java-shopping-container \
+                -p 80:8080 \
+                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0
+
+                EOF
+            '''
+        }
+    }
+}
 }
 }
