@@ -1,2 +1,2 @@
 [app_servers]
-15.206.187.247 ansible_user=ubuntu ansible_ssh_private_key_file=/home/mveer/linux-key.pem
+15.206.187.247 ansible_user=ubuntu
