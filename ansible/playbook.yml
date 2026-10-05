@@ -1,0 +1,54 @@
+- name: Deploy Java Shopping Application
+  hosts: app_servers
+  become: true
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+    - name: Make sure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Show deployment values
+      debug:
+        msg:
+          - "AWS Region: {{ aws_region }}"
+          - "ECR Image: {{ ecr_image }}"
+          - "Container Name: {{ container_name }}"
+          - "Port: {{ host_port }}:{{ container_port }}"
+
+    - name: Login to Amazon ECR
+      shell: |
+        aws ecr get-login-password --region {{ aws_region }} |
+        docker login --username AWS --password-stdin {{ ecr_registry }}
+
+    - name: Pull Java Shopping Docker image
+      community.docker.docker_image:
+        name: "{{ ecr_image }}"
+
+        source: pull
+
+    - name: Run Java Shopping container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ ecr_image }}"
+        state: started
+        restart: true
+        recreate: true
+        ports:
+          - "{{ host_port }}:{{ container_port }}"
+
+    - name: Check Java Shopping application health
+      uri:
+        url: "http://localhost:{{ host_port }}/health"
+        status_code: 200
+        return_content: true
+      register: health_result
+
+    - name: Display application health
+      debug:
+        msg: "Application health: {{ health_result.content }}"

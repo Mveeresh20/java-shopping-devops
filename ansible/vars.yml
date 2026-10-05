@@ -1,0 +1,11 @@
+aws_region: "ap-south-1"
+
+ecr_registry: "536697229262.dkr.ecr.ap-south-1.amazonaws.com"
+
+ecr_image: "536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0"
+
+container_name: "java-shopping-container"
+
+host_port: 80
+
+container_port: 8080
