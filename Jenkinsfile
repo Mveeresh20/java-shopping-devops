@@ -89,7 +89,7 @@ stage('Push to ECR') {
                 docker login --username AWS --password-stdin \
                 536697229262.dkr.ecr.ap-south-1.amazonaws.com
 
-                docker tag java-shopping-app:1.0 \
+                docker tag java-shopping-app:${BUILD_NUMBER} \
                 536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:${BUILD_NUMBER}
 
                 docker push \
