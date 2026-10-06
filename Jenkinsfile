@@ -46,7 +46,7 @@ stage('Docker Run') {
             docker run -d \
                 --name java-shopping-container \
                 -p 8082:8080 \
-                java-shopping-app:1.0
+                java-shopping-app:${BUILD_NUMBER}
         '''
     }
 }
@@ -90,10 +90,10 @@ stage('Push to ECR') {
                 536697229262.dkr.ecr.ap-south-1.amazonaws.com
 
                 docker tag java-shopping-app:1.0 \
-                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0
+                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:${BUILD_NUMBER}
 
                 docker push \
-                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0
+                536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:${BUILD_NUMBER}
             '''
         }
     }
@@ -115,7 +115,7 @@ stage('Deploy with Ansible') {
             sh '''
                 ansible-playbook \
                 -i ansible/inventory \
-                ansible/playbook.yml
+                ansible/playbook.yml -e image_tag=${BUILD_NUMBER}
             '''
         }
     }

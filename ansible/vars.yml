@@ -2,7 +2,9 @@ aws_region: "ap-south-1"
 
 ecr_registry: "536697229262.dkr.ecr.ap-south-1.amazonaws.com"
 
-ecr_image: "536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:1.0"
+image_tag: "latest"
+
+ecr_image: "536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:{{ image_tag }}"
 
 container_name: "java-shopping-container"
 
