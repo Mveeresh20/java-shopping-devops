@@ -34,7 +34,7 @@ pipeline {
         stage('Docker Build') {
     steps {
         echo 'Building Docker image...'
-        sh 'docker build -t java-shopping-app:1.0 .'
+        sh 'docker build -t java-shopping-app:${BUILD_NUMBER} .'
     }
 }
 stage('Docker Run') {
