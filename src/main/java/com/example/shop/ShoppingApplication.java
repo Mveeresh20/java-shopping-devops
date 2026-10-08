@@ -10,7 +10,7 @@ public class ShoppingApplication {
     public static void main(String[] args) throws IOException {
 
         HttpServer server = HttpServer.create(
-                new InetSocketAddress(8080),
+                new InetSocketAddress("0.0.0.0",8080),
                 0
         );
 
