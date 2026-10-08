@@ -1,0 +1,11 @@
+replicaCount: 3
+
+image:
+  repository: 536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name
+  tag: "32"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8080

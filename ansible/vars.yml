@@ -4,6 +4,8 @@ ecr_registry: "536697229262.dkr.ecr.ap-south-1.amazonaws.com"
 
 image_tag: "latest"
 
+previous_image_tag: ""
+
 ecr_image: "536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:{{ image_tag }}"
 
 container_name: "java-shopping-container"
@@ -11,3 +13,9 @@ container_name: "java-shopping-container"
 host_port: 80
 
 container_port: 8080
+
+app_environment: "production"
+
+app_name: "Java Shopping Application"
+
+app_port: 8080

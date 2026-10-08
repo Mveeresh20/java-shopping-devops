@@ -1,0 +1,15 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop:
+    - docker.io
+    - curl
+    - git
+
+- name: Create application configuration
+  template:
+    src: app.conf.j2
+    dest: /tmp/app.conf

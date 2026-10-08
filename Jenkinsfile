@@ -116,9 +116,33 @@ stage('Deploy with Ansible') {
                 ansible-playbook \
                 -i ansible/inventory \
                 ansible/playbook.yml -e image_tag=${BUILD_NUMBER}
+               \-e previous_image_tag=$((BUILD_NUMBER - 1))
             '''
         }
     }
-}        }
+}
+stage('Test Jenkins EKS Access') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'credentials',
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
+            sh '''
+                aws sts get-caller-identity
+
+                export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                aws eks update-kubeconfig \
+                  --region ap-south-1 \
+                  --name java-shopping-eks
+
+                kubectl get nodes
+            '''
+        }
+    }
+}
+        }
+
     }
 

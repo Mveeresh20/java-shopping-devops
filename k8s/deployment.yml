@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: java-shopping
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: java-shopping
+
+  template:
+    metadata:
+      labels:
+        app: java-shopping
+
+    spec:
+      imagePullSecrets: 
+        - name: ecr-secret
+      containers:
+        - name: java-shopping
+          image: 536697229262.dkr.ecr.ap-south-1.amazonaws.com/java-shopping-name:32
+
+          ports:
+            - containerPort: 8080

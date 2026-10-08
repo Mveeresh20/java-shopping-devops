@@ -2,16 +2,13 @@
   hosts: app_servers
   become: true
 
+  roles: 
+    - java_app
+
   vars_files:
     - vars.yml
 
   tasks:
-
-    - name: Make sure Docker is installed
-      apt:
-        name: docker.io
-        state: present
-        update_cache: true
 
     - name: Show deployment values
       debug:
@@ -32,23 +29,50 @@
 
         source: pull
 
-    - name: Run Java Shopping container
-      community.docker.docker_container:
-        name: "{{ container_name }}"
-        image: "{{ ecr_image }}"
-        state: started
-        restart: true
-        recreate: true
-        ports:
-          - "{{ host_port }}:{{ container_port }}"
+      
+    - name: Deploy and verify new version
+      block:
 
-    - name: Check Java Shopping application health
-      uri:
-        url: "http://localhost:{{ host_port }}/health"
-        status_code: 200
-        return_content: true
-      register: health_result
+        - name: Run Java Shopping container
+          community.docker.docker_container:
+            name: "{{ container_name }}"
+            image: "{{ ecr_image }}"
+            state: started
+            restart: true
+            recreate: true
+            ports:
+              - "{{ host_port }}:{{ container_port }}"
 
-    - name: Display application health
-      debug:
-        msg: "Application health: {{ health_result.content }}"
+        - name: Check Java Shopping application health
+          uri:
+            url: "http://localhost:{{ host_port }}/health"
+            status_code: 200
+            return_content: true
+
+        - name: Display application health
+          debug:
+            msg: "Application health: UP"
+
+      rescue:
+
+        - name: Rollback to previous Docker image
+          community.docker.docker_container:
+            name: "{{ container_name }}"
+            image: "{{ ecr_registry }}/java-shopping-name:{{ previous_image_tag }}"
+            state: started
+            restart: true
+            recreate: true
+            ports:
+              - "{{ host_port }}:{{ container_port }}"
+
+        - name: Check application health after rollback
+          uri:
+            url: "http://localhost:{{ host_port }}/health"
+            status_code: 200
+            return_content: true
+          register: rollback_health
+
+        - name: Display rollback health
+          debug:
+            msg: "Rollback application health: {{ rollback_health.content }}"
+
