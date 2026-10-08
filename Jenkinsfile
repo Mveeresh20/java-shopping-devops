@@ -115,8 +115,8 @@ stage('Deploy with Ansible') {
             sh '''
                 ansible-playbook \
                 -i ansible/inventory \
-                ansible/playbook.yml -e image_tag=${BUILD_NUMBER}
-               \-e previous_image_tag=$((BUILD_NUMBER - 1))
+                ansible/playbook.yml -e image_tag=${BUILD_NUMBER} \
+                -e previous_image_tag=$((BUILD_NUMBER - 1))
             '''
         }
     }
