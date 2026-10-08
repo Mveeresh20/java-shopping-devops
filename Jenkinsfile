@@ -142,6 +142,31 @@ stage('Test Jenkins EKS Access') {
         }
     }
 }
+stage('Deploy to EKS with Helm') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'credentials',
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
+            sh '''
+                export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                aws eks update-kubeconfig \
+                  --region ap-south-1 \
+                  --name java-shopping-eks
+
+                helm upgrade --install java-shopping ./java-shopping \
+                  --set image.tag=${BUILD_NUMBER}
+
+                kubectl rollout status deployment/java-shopping --timeout=180s
+
+                kubectl get pods
+                kubectl get svc
+            '''
+        }
+    }
+}
         }
 
     }
